@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+   <!--<HorizontalScrollView
+       android:id="@+id/scroll_container"
+       android:layout_marginLeft="20dp"
+       android:layout_marginRight="20dp"
+       android:layout_width="match_parent"
+       android:scrollbars="none"
+       android:layout_height="wrap_content">
+       <com.example.pavelprimak.customviewapp.customView.LineGraphView
+           android:id="@+id/lineView"
+           app:LgvBackgroundColor="@color/colorPrimary"
+           android:layout_marginTop="20dp"
+           app:LgvMarkEventColor="@color/colorAccent"
+           app:LgvMainEventColor="@android:color/white"
+           app:LgvBorderHeight="20dp"
+           app:LgvTextColor="@android:color/darker_gray"
+           app:LgvTextSize="10dp"
+           app:LgvMinDivider="min"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+   </HorizontalScrollView>-->
+    <com.example.pavelprimak.customviewapp.customView.SeekBar24HourView
+        android:id="@+id/seek_bar"
+        app:Sb24hBackgroundColor="@android:color/holo_red_light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.example.pavelprimak.customviewapp.customView.SeekBar24HourView>
+
+    <Button
+        android:id="@+id/btn_draw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:text="Draw"/>
+
+
+
+
+</LinearLayout>
