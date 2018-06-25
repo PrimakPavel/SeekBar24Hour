@@ -1,4 +1,4 @@
-package com.example.pavelprimak.customviewapp.customView
+package com.pavelprimak.seekbar24hour.customView
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,12 +10,17 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.example.pavelprimak.customviewapp.OnSeek24BarChangeListener
-import com.example.pavelprimak.customviewapp.R
-import com.example.pavelprimak.customviewapp.utils.ConvertValueUtil
+import com.pavelprimak.seekbar24hour.OnSeek24BarChangeListener
+import com.pavelprimak.seekbar24hour.R
+import com.pavelprimak.seekbar24hour.customView.LineGraphView.Companion.SEC_IN_MIN
+import com.pavelprimak.seekbar24hour.utils.ConvertValueUtil
 
 
 class SeekBar24HourView : LinearLayout {
+    companion object {
+        const val MINUTES_IN_GRAPH = 1440
+    }
+
     //COLORS
     private var backgroundColors = LineGraphView.DEFAULT_BACKGROUND_COLOR
     private var textColor = LineGraphView.DEFAULT_TEXT_COLOR
@@ -90,6 +95,15 @@ class SeekBar24HourView : LinearLayout {
             cursorView?.setImageDrawable(cursorDrawable)
         } catch (e: Exception) {
         }
+    }
+
+    fun getPositionInSec(): Int {
+        return (getPositionInPercents() * SEC_IN_MIN * MINUTES_IN_GRAPH).toInt()
+    }
+
+    fun setPositionInSec(seconds: Int) {
+        val per = seconds * 1f / SEC_IN_MIN / MINUTES_IN_GRAPH
+        setPositionInPercents(per)
     }
 
     fun setPositionInPercents(percents: Float) {

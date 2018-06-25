@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.Toast
-import com.example.pavelprimak.customviewapp.customView.SeekBar24HourView
-import com.example.pavelprimak.customviewapp.model.Event
+import com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
+import com.pavelprimak.seekbar24hour.model.Event
 
 class MainActivity : AppCompatActivity() {
     private val seekBarView: SeekBar24HourView by lazy {

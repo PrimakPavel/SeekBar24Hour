@@ -1,4 +1,4 @@
-package com.example.pavelprimak.customviewapp
+package com.pavelprimak.seekbar24hour
 
 interface OnSeek24BarChangeListener {
     fun onProgressChanged(progressInPercents: Float, fromUser: Boolean)

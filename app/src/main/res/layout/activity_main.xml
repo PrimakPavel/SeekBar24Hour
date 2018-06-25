@@ -26,7 +26,7 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content" />
    </HorizontalScrollView>-->
-    <com.example.pavelprimak.customviewapp.customView.SeekBar24HourView
+    <com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
         android:id="@+id/seek_bar"
         app:Sb24hBackgroundColor="@android:color/holo_red_light"
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
         android:layout_marginRight="16dp"
         android:layout_height="wrap_content">
 
-    </com.example.pavelprimak.customviewapp.customView.SeekBar24HourView>
+    </com.pavelprimak.seekbar24hour.customView.SeekBar24HourView>
 
     <Button
         android:id="@+id/btn_draw"

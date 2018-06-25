@@ -9,17 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.example.pavelprimak.customviewapp.customView.CustomHorizontalScrollView
+        <com.pavelprimak.seekbar24hour.customView.CustomHorizontalScrollView
             android:id="@+id/scroll_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none">
 
-            <com.example.pavelprimak.customviewapp.customView.LineGraphView
+            <com.pavelprimak.seekbar24hour.customView.LineGraphView
                 android:id="@+id/line_graph_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </com.example.pavelprimak.customviewapp.customView.CustomHorizontalScrollView>
+        </com.pavelprimak.seekbar24hour.customView.CustomHorizontalScrollView>
 
         <ImageView
             android:id="@+id/cursor_view"

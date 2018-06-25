@@ -1,4 +1,4 @@
-package com.example.pavelprimak.customviewapp.customView
+package com.pavelprimak.seekbar24hour.customView
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,9 +8,10 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.View
-import com.example.pavelprimak.customviewapp.R
-import com.example.pavelprimak.customviewapp.model.Event
-import com.example.pavelprimak.customviewapp.utils.ConvertValueUtil
+import com.pavelprimak.seekbar24hour.model.Event
+import com.pavelprimak.seekbar24hour.R
+import com.pavelprimak.seekbar24hour.utils.ConvertValueUtil
+import java.util.*
 
 
 class LineGraphView : View {

@@ -1,4 +1,4 @@
-package com.example.pavelprimak.customviewapp.utils
+package com.pavelprimak.seekbar24hour.utils
 
 import android.content.Context
 import android.util.DisplayMetrics

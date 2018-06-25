@@ -1,4 +1,4 @@
-package com.example.pavelprimak.customviewapp.customView
+package com.pavelprimak.seekbar24hour.customView
 
 import android.content.Context
 import android.util.AttributeSet
