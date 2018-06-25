@@ -16,7 +16,8 @@ import com.example.pavelprimak.customviewapp.utils.ConvertValueUtil
 class LineGraphView : View {
     companion object {
         const val TOP_MARGIN = 20f//in dp
-        const val LEFT_MARGIN = 0f
+        const val DEFAULT_LEFT_MARGIN = 0f
+        const val DEFAULT_RIGHT_MARGIN = 0f
         const val WIDTH_MINUTES_GRAPH = 1440f//in dp
         const val WIDTH_SECONDS_GRAPH = 86400f//in dp
         const val DEFAULT_HEIGHT_GRAPH = 30f//in dp
@@ -31,7 +32,7 @@ class LineGraphView : View {
         const val DEFAULT_MAIN_EVENT_COLOR = Color.GRAY
         const val DEFAULT_MARK_EVENT_COLOR = Color.RED
         const val DEFAULT_LINE_WIDTH = 1f//in dp
-        const val DEFAULT_LINE_HEIGHT = 7f//in dp
+        const val DEFAULT_LINE_HEIGHT = 5f//in dp
     }
 
     //COLORS
@@ -44,6 +45,8 @@ class LineGraphView : View {
     private var dividerType = DIVIDER_MINUTES
     private var mainWidthInPx = ConvertValueUtil.convertDpToPixel(WIDTH_MINUTES_GRAPH, context)
     private var topMarginInPx = ConvertValueUtil.convertDpToPixel(TOP_MARGIN, context)
+    private var leftMarginInPx = ConvertValueUtil.convertDpToPixel(DEFAULT_LEFT_MARGIN, context)
+    private var rightMarginInPx = ConvertValueUtil.convertDpToPixel(DEFAULT_RIGHT_MARGIN, context)
     private var mainHeightInPx = ConvertValueUtil.convertDpToPixel(DEFAULT_HEIGHT_GRAPH, context)
     private var lineWidthInPx = ConvertValueUtil.convertDpToPixel(DEFAULT_LINE_WIDTH, context)
     private var lineHeightInPx = ConvertValueUtil.convertDpToPixel(DEFAULT_LINE_HEIGHT, context)
@@ -111,10 +114,15 @@ class LineGraphView : View {
                                mainEventColor: Int = DEFAULT_MAIN_EVENT_COLOR,
                                markEventColor: Int = DEFAULT_MARK_EVENT_COLOR,
                                textColor: Int = DEFAULT_TEXT_COLOR,
-                               textSize: Int = ConvertValueUtil.convertDpToPixel(DEFAULT_TEXT_SIZE, context).toInt(),
+                               textSize: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_TEXT_SIZE, context),
                                dividerType: Int = DIVIDER_MINUTES,
-                               mainHeight: Int = ConvertValueUtil.convertDpToPixel(DEFAULT_HEIGHT_GRAPH, context).toInt()) {
-        init(backgroundColors, mainEventColor, markEventColor, textColor, textSize, dividerType, mainHeight)
+                               mainHeight: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_HEIGHT_GRAPH, context),
+                               lineWidthInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_LINE_HEIGHT, context),
+                               lineHeightInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_LINE_HEIGHT, context),
+                               leftMarginInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_LEFT_MARGIN, context),
+                               rightMarginInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_RIGHT_MARGIN, context)
+    ) {
+        initInPx(backgroundColors, mainEventColor, markEventColor, textColor, textSize, dividerType, mainHeight, lineWidthInPx, lineHeightInPx, leftMarginInPx, rightMarginInPx)
         invalidate()
     }
 
@@ -147,41 +155,55 @@ class LineGraphView : View {
         initGraphWidth()
     }
 
-    private fun init(backgroundColors: Int, mainEventColor: Int, markEventColor: Int, textColor: Int, textSizeInPx: Int, dividerType: Int, mainHeightInPx: Int) {
+    private fun initInPx(backgroundColors: Int,
+                         mainEventColor: Int,
+                         markEventColor: Int,
+                         textColor: Int,
+                         textSizeInPx: Float,
+                         dividerType: Int,
+                         mainHeightInPx: Float,
+                         lineWidthInPx: Float,
+                         lineHeightInPx: Float,
+                         leftMarginInPx: Float,
+                         rightMarginInPx: Float) {
         this.backgroundColors = backgroundColors
         this.mainEventColor = mainEventColor
         this.markEventColor = markEventColor
         this.textColor = textColor
-        this.textSizeInPx = textSizeInPx.toFloat()
+        this.textSizeInPx = textSizeInPx
         this.dividerType = dividerType
-        this.mainHeightInPx = mainHeightInPx.toFloat()
+        this.mainHeightInPx = mainHeightInPx
+        this.lineWidthInPx = lineWidthInPx
+        this.lineHeightInPx = lineHeightInPx
+        this.leftMarginInPx = leftMarginInPx
+        this.rightMarginInPx = rightMarginInPx
         initGraphWidth()
     }
 
     private fun initGraphWidth() {
         mainWidthInPx = if (dividerType == DIVIDER_MINUTES) {
-            ConvertValueUtil.convertDpToPixel(WIDTH_MINUTES_GRAPH, context)
+            ConvertValueUtil.convertDpToPixel(WIDTH_MINUTES_GRAPH, context) + leftMarginInPx + rightMarginInPx
         } else {
-            ConvertValueUtil.convertDpToPixel(WIDTH_SECONDS_GRAPH, context)
+            ConvertValueUtil.convertDpToPixel(WIDTH_SECONDS_GRAPH, context) + leftMarginInPx
         }
     }
 
     private fun drawBackground(canvas: Canvas) {
         paint.color = backgroundColors
         paint.strokeWidth = 0f
-        canvas.drawRect(LEFT_MARGIN, topMarginInPx, mainWidthInPx, mainHeightInPx, paint)
+        canvas.drawRect(0f, topMarginInPx, mainWidthInPx, mainHeightInPx, paint)
     }
 
     private fun drawText(canvas: Canvas, position: Float, text: String) {
         paint.color = textColor
         paint.textSize = textSizeInPx
-        var textLeftMargin = 0f
-        textLeftMargin = when (text.length) {
+        //paint.typeface = Typeface.create("Arial",Typeface.ITALIC)
+        val textLeftMargin: Float = when (text.length) {
             3 -> textSizeInPx / 1.5f
             4 -> textSizeInPx
             else -> textSizeInPx / 2
         }
-        canvas.drawText(text, position - textLeftMargin, textTopMarginInPx, paint)
+        canvas.drawText(text, leftMarginInPx + position - textLeftMargin, textTopMarginInPx, paint)
     }
 
     private fun drawTexts(canvas: Canvas) {
@@ -212,7 +234,7 @@ class LineGraphView : View {
     private fun drawLine(canvas: Canvas, position: Float) {
         paint.color = textColor
         paint.strokeWidth = lineWidthInPx
-        canvas.drawLine(position, topMarginInPx - lineHeightInPx / 2, position, topMarginInPx + lineHeightInPx / 2, paint)
+        canvas.drawLine(leftMarginInPx + position, topMarginInPx - lineHeightInPx / 2, leftMarginInPx + position, topMarginInPx + lineHeightInPx / 2, paint)
     }
 
     fun setMainEventList(mainEvents: List<Event>) {
@@ -236,17 +258,18 @@ class LineGraphView : View {
     }
 
     private fun drawMainEvent(canvas: Canvas, startPosition: Float, duration: Float) {
+        val startPositionWithLeftMargin = leftMarginInPx + startPosition
         paint.strokeWidth = 0f
         paint.color = mainEventColor
-        val finishPosition = startPosition + duration
-        canvas.drawRect(startPosition, topMarginInPx, finishPosition, mainHeightInPx, paint)
+        val finishPosition = startPositionWithLeftMargin + duration
+        canvas.drawRect(startPositionWithLeftMargin, topMarginInPx, finishPosition, mainHeightInPx, paint)
     }
 
     private fun drawMarkEvent(canvas: Canvas, startPosition: Float, duration: Float) {
+        val startPositionWithLeftMargin = leftMarginInPx + startPosition
         paint.strokeWidth = 0f
         paint.color = markEventColor
-        val finishPosition = startPosition + duration
-        canvas.drawRect(startPosition, topMarginInPx, finishPosition, mainHeightInPx, paint)
+        val finishPosition = startPositionWithLeftMargin + duration
+        canvas.drawRect(startPositionWithLeftMargin, topMarginInPx, finishPosition, mainHeightInPx, paint)
     }
-
 }

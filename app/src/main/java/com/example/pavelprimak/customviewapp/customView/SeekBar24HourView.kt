@@ -1,16 +1,21 @@
 package com.example.pavelprimak.customviewapp.customView
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
-import android.widget.HorizontalScrollView
+import android.util.Log
+import android.view.MotionEvent
+import android.widget.ImageView
 import android.widget.LinearLayout
+import com.example.pavelprimak.customviewapp.OnSeek24BarChangeListener
 import com.example.pavelprimak.customviewapp.R
 import com.example.pavelprimak.customviewapp.utils.ConvertValueUtil
 
-class SeekBar24HourView : LinearLayout {
 
+class SeekBar24HourView : LinearLayout {
     //COLORS
     private var backgroundColors = LineGraphView.DEFAULT_BACKGROUND_COLOR
     private var textColor = LineGraphView.DEFAULT_TEXT_COLOR
@@ -19,17 +24,18 @@ class SeekBar24HourView : LinearLayout {
 
     //SIZES
     private var dividerType = LineGraphView.DIVIDER_MINUTES
-    private var mainWidthInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.WIDTH_MINUTES_GRAPH, context)
     private var topMarginInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.TOP_MARGIN, context)
     private var mainHeightInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.DEFAULT_HEIGHT_GRAPH, context)
     private var lineWidthInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.DEFAULT_LINE_WIDTH, context)
     private var lineHeightInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.DEFAULT_LINE_HEIGHT, context)
     private var textSizeInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.DEFAULT_TEXT_SIZE, context)
-    private var textTopMarginInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.DEFAULT_TEXT_TOP_MARGIN, context)
+    private var changeListener: OnSeek24BarChangeListener? = null
 
-
-    private var scrollContainer: HorizontalScrollView? = null
+    private var scrollView: CustomHorizontalScrollView? = null
+    private var isUserTouch = false
     var lineGraphView: LineGraphView? = null
+    private var cursorView: ImageView? = null
+    var percents: Float = 0f
 
     constructor(context: Context) : super(context) {
         init(null)
@@ -62,12 +68,96 @@ class SeekBar24HourView : LinearLayout {
         dividerType = typedArray.getInt(R.styleable.SeekBar24HourView_Sb24hMinDivider, LineGraphView.DIVIDER_MINUTES)
         mainHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_Sb24hBorderHeight, mainHeightInPx) + topMarginInPx
 
+        lineWidthInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_Sb24hDivLineWidth, lineWidthInPx)
+        lineHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_Sb24hDivLineHeight, lineHeightInPx)
 
-        scrollContainer = findViewById(R.id.scroll_view)
+        scrollView = findViewById(R.id.scroll_view)
+        cursorView = findViewById(R.id.cursor_view)
         lineGraphView = findViewById(R.id.line_graph_view)
-        lineGraphView?.setValuesAndInvalidate(backgroundColors, mainEventColor, markEventColor, textColor, textSizeInPx.toInt(), dividerType, mainHeightInPx.toInt())
-
+        prepareScrollEventListener(scrollView)
+        prepareTouchEventListener(scrollView)
+        scrollView?.setOnScrollStoppedListener(object : CustomHorizontalScrollView.OnScrollStoppedListener {
+            override fun onScrollStopped() {
+                isUserTouch = false
+                changeListener?.onStopTrackingTouch(percents)
+                Log.e("Scroll", "onStopTrackingTouch % = $percents")
+            }
+        })
     }
 
+    fun setCursorDrawable(cursorDrawable: Drawable) {
+        try {
+            cursorView?.setImageDrawable(cursorDrawable)
+        } catch (e: Exception) {
+        }
+    }
 
+    fun setPositionInPercents(percents: Float) {
+        if (percents in 0f..100f) {
+            this.percents = percents
+            lineGraphView?.width?.let { graphWidth ->
+                scrollView?.width?.let { scrollWidth ->
+                    val positionX = percents * (graphWidth - scrollWidth) / 100f
+                    scrollView?.scrollTo(positionX.toInt(), 0)
+                }
+            }
+        }
+    }
+
+    fun getPositionInPercents(): Float {
+        lineGraphView?.width?.let { graphWidth ->
+            scrollView?.width?.let { scrollWidth ->
+                scrollView?.scrollX?.let { x ->
+                    percents = x * 100f / (graphWidth - scrollWidth)
+                    return percents
+                }
+            }
+        }
+        return 0f
+    }
+
+    fun setOnSeek24BarChangeListener(listener: OnSeek24BarChangeListener) {
+        changeListener = listener
+    }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        super.onLayout(changed, l, t, r, b)
+        Log.d("Scroll", "ScrollContainerWidth = " + scrollView?.width)
+        val marginInPx = scrollView?.width?.toFloat() ?: 0f
+        lineGraphView?.setValuesAndInvalidate(backgroundColors, mainEventColor, markEventColor, textColor, textSizeInPx, dividerType, mainHeightInPx, lineWidthInPx, lineHeightInPx, marginInPx / 2, marginInPx / 2)
+    }
+
+    private fun prepareScrollEventListener(scrollView: CustomHorizontalScrollView?) {
+        scrollView?.viewTreeObserver?.addOnScrollChangedListener {
+            val scrollX = scrollView.scrollX // For HorizontalScrollView
+            // DO SOMETHING WITH THE SCROLL COORDINATES
+            lineGraphView?.width?.let { width ->
+                percents = scrollX * 100f / (width - scrollView.width)
+                if (percents in 0f..100f) {
+                    changeListener?.onProgressChanged(percents, isUserTouch)
+                    Log.d("Scroll", "onProgressChanged % = $percents.IsUser = $isUserTouch")
+                }
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun prepareTouchEventListener(scrollView: CustomHorizontalScrollView?) {
+        scrollView?.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    isUserTouch = true
+                    percents = getPositionInPercents()
+                    changeListener?.onStartTrackingTouch(percents)
+                    Log.e("Scroll", "onStartTrackingTouch % = $percents")
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    isUserTouch = true
+                }
+                MotionEvent.ACTION_UP ->
+                    scrollView.startScrollerTask()
+            }
+            false
+        }
+    }
 }

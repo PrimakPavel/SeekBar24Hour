@@ -30,6 +30,9 @@
         android:id="@+id/seek_bar"
         app:Sb24hBackgroundColor="@android:color/holo_red_light"
         android:layout_width="match_parent"
+        app:Sb24hBorderHeight="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_height="wrap_content">
 
     </com.example.pavelprimak.customviewapp.customView.SeekBar24HourView>
