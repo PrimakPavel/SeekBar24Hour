@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Parcelable
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.util.Log
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import com.pavelprimak.seekbar24hour.OnSeek24BarChangeListener
 import com.pavelprimak.seekbar24hour.R
 import com.pavelprimak.seekbar24hour.customView.LineGraphView.Companion.SEC_IN_MIN
+import com.pavelprimak.seekbar24hour.model.PositionSavedState
 import com.pavelprimak.seekbar24hour.utils.ConvertValueUtil
 
 
@@ -92,6 +94,7 @@ class SeekBar24HourView : LinearLayout {
         scrollView?.setOnScrollStoppedListener(object : CustomHorizontalScrollView.OnScrollStoppedListener {
             override fun onScrollStopped() {
                 isUserTouch = false
+                percents = getPositionInPercents()
                 changeListener?.onStopTrackingTouch(percents)
                 Log.e("Scroll", "onStopTrackingTouch % = $percents")
             }
@@ -159,6 +162,8 @@ class SeekBar24HourView : LinearLayout {
                 marginInPx / 2,
                 marginInPx / 2,
                 fontFamilyName)
+        //update position
+        setPositionInPercents(percents)
     }
 
     private fun prepareScrollEventListener(scrollView: CustomHorizontalScrollView?) {
@@ -166,7 +171,7 @@ class SeekBar24HourView : LinearLayout {
             val scrollX = scrollView.scrollX // For HorizontalScrollView
             // DO SOMETHING WITH THE SCROLL COORDINATES
             lineGraphView?.width?.let { width ->
-                percents = scrollX * 100f / (width - scrollView.width)
+                val percents = scrollX * 100f / (width - scrollView.width)
                 if (percents in 0f..100f) {
                     changeListener?.onProgressChanged(percents, isUserTouch)
                     Log.d("Scroll", "onProgressChanged % = $percents.IsUser = $isUserTouch")
@@ -192,6 +197,22 @@ class SeekBar24HourView : LinearLayout {
                     scrollView.startScrollerTask()
             }
             false
+        }
+    }
+
+    public override fun onSaveInstanceState(): Parcelable? {
+        val positionSavedState = PositionSavedState(super.onSaveInstanceState())
+        positionSavedState.position = percents
+        return positionSavedState
+    }
+
+    public override fun onRestoreInstanceState(state: Parcelable) {
+        if (state is PositionSavedState) {
+            percents = state.position
+            Log.d("Scroll", "Percentage =$percents")
+            super.onRestoreInstanceState(state.superState)
+        } else {
+            super.onRestoreInstanceState(state)
         }
     }
 }

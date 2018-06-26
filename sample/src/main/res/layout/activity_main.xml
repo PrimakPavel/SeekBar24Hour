@@ -19,7 +19,7 @@
         app:sb24h_markEventColor="@android:color/darker_gray"
         app:sb24h_borderHeight="40dp"
         app:sb24h_minDivider="min"
-        app:sb24h_textFontFamilyName="sans-serif-light"
+        app:sb24h_textFontFamilyName="her"
         app:sb24h_textSize="12dp" />
 
     <com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
