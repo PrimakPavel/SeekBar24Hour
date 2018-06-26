@@ -36,6 +36,9 @@ class SeekBar24HourView : LinearLayout {
     private var textSizeInPx = ConvertValueUtil.convertDpToPixel(LineGraphView.DEFAULT_TEXT_SIZE, context)
     private var changeListener: OnSeek24BarChangeListener? = null
 
+    //Typeface
+    private var fontFamilyName = LineGraphView.DEFAULT_FONT_FAMILY_NAME
+
     private var scrollView: CustomHorizontalScrollView? = null
     private var isUserTouch = false
     var lineGraphView: LineGraphView? = null
@@ -65,16 +68,21 @@ class SeekBar24HourView : LinearLayout {
         // Obtain a typed array of attributes
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.SeekBar24HourView,
                 0, 0)
-        backgroundColors = typedArray.getColor(R.styleable.SeekBar24HourView_Sb24hBackgroundColor, LineGraphView.DEFAULT_BACKGROUND_COLOR)
-        mainEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_Sb24hMainEventColor, LineGraphView.DEFAULT_MAIN_EVENT_COLOR)
-        markEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_Sb24hMarkEventColor, LineGraphView.DEFAULT_MARK_EVENT_COLOR)
-        textColor = typedArray.getColor(R.styleable.SeekBar24HourView_Sb24hTextColor, LineGraphView.DEFAULT_TEXT_COLOR)
-        textSizeInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_Sb24hTextSize, textSizeInPx)
-        dividerType = typedArray.getInt(R.styleable.SeekBar24HourView_Sb24hMinDivider, LineGraphView.DIVIDER_MINUTES)
-        mainHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_Sb24hBorderHeight, mainHeightInPx) + topMarginInPx
+        backgroundColors = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_backgroundColor, LineGraphView.DEFAULT_BACKGROUND_COLOR)
+        mainEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_mainEventColor, LineGraphView.DEFAULT_MAIN_EVENT_COLOR)
+        markEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_markEventColor, LineGraphView.DEFAULT_MARK_EVENT_COLOR)
+        textColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_textColor, LineGraphView.DEFAULT_TEXT_COLOR)
+        textSizeInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_textSize, textSizeInPx)
+        dividerType = typedArray.getInt(R.styleable.SeekBar24HourView_sb24h_minDivider, LineGraphView.DIVIDER_MINUTES)
+        mainHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_borderHeight, mainHeightInPx) + topMarginInPx
 
-        lineWidthInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_Sb24hDivLineWidth, lineWidthInPx)
-        lineHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_Sb24hDivLineHeight, lineHeightInPx)
+        lineWidthInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_divLineWidth, lineWidthInPx)
+        lineHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_divLineHeight, lineHeightInPx)
+
+        fontFamilyName = typedArray.getString(R.styleable.SeekBar24HourView_sb24h_textFontFamilyName)
+        if (fontFamilyName.isEmpty()) {
+            fontFamilyName = LineGraphView.DEFAULT_FONT_FAMILY_NAME
+        }
 
         scrollView = findViewById(R.id.scroll_view)
         cursorView = findViewById(R.id.cursor_view)
@@ -138,7 +146,19 @@ class SeekBar24HourView : LinearLayout {
         super.onLayout(changed, l, t, r, b)
         Log.d("Scroll", "ScrollContainerWidth = " + scrollView?.width)
         val marginInPx = scrollView?.width?.toFloat() ?: 0f
-        lineGraphView?.setValuesAndInvalidate(backgroundColors, mainEventColor, markEventColor, textColor, textSizeInPx, dividerType, mainHeightInPx, lineWidthInPx, lineHeightInPx, marginInPx / 2, marginInPx / 2)
+        lineGraphView?.setValuesAndInvalidate(
+                backgroundColors,
+                mainEventColor,
+                markEventColor,
+                textColor,
+                textSizeInPx,
+                dividerType,
+                mainHeightInPx,
+                lineWidthInPx,
+                lineHeightInPx,
+                marginInPx / 2,
+                marginInPx / 2,
+                fontFamilyName)
     }
 
     private fun prepareScrollEventListener(scrollView: CustomHorizontalScrollView?) {

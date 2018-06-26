@@ -1,30 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CustomView">
-        <attr name="faceColor" format="color"/>
-        <attr name="eyesColor" format="color"/>
-        <attr name="mouthColor" format="color"/>
-        <attr name="borderColor" format="color"/>
-        <attr name="borderWidth" format="dimension"/>
-        <attr name="state" format="enum">
-            <enum name="happy" value="0" />
-            <enum name="sad" value="1" />
-        </attr>
-
-    </declare-styleable>
 
     <declare-styleable name="LineGraphView">
-        <attr name="LgvBackgroundColor" format="color"/>
-        <attr name="LgvMainEventColor" format="color"/>
-        <attr name="LgvMarkEventColor" format="color"/>
-        <attr name="LgvTextColor" format="color"/>
-        <attr name="LgvTextSize" format="dimension"/>
-        <attr name="LgvBorderHeight" format="dimension"/>
-        <attr name="LgvState" format="enum">
+        <attr name="lgv_backgroundColor" format="color"/>
+        <attr name="lgv_mainEventColor" format="color"/>
+        <attr name="lgv_markEventColor" format="color"/>
+        <attr name="lgv_textColor" format="color"/>
+        <attr name="lgv_textSize" format="dimension"/>
+        <attr name="lgv_borderHeight" format="dimension"/>
+        <attr name="lgv_state" format="enum">
             <enum name="enable" value="0" />
             <enum name="disable" value="1" />
         </attr>
-        <attr name="LgvMinDivider" format="enum">
+        <attr name="lgv_minDivider" format="enum">
             <enum name="min" value="0" />
             <enum name="sec" value="1" />
         </attr>
@@ -32,19 +20,21 @@
 
 
     <declare-styleable name="SeekBar24HourView">
-        <attr name="Sb24hBackgroundColor" format="color"/>
-        <attr name="Sb24hMainEventColor" format="color"/>
-        <attr name="Sb24hMarkEventColor" format="color"/>
-        <attr name="Sb24hTextColor" format="color"/>
-        <attr name="Sb24hTextSize" format="dimension"/>
-        <attr name="Sb24hBorderHeight" format="dimension"/>
-        <attr name="Sb24hDivLineHeight" format="dimension"/>
-        <attr name="Sb24hDivLineWidth" format="dimension"/>
-        <attr name="Sb24hState" format="enum">
+        <attr name="sb24h_backgroundColor" format="color"/>
+        <attr name="sb24h_mainEventColor" format="color"/>
+        <attr name="sb24h_markEventColor" format="color"/>
+        <attr name="sb24h_textColor" format="color"/>
+        <attr name="sb24h_textSize" format="dimension"/>
+        <attr name="sb24h_textFontFamilyName" format="string"/>
+        <attr name="sb24h_textFontStyle" format="integer"/>
+        <attr name="sb24h_borderHeight" format="dimension"/>
+        <attr name="sb24h_divLineHeight" format="dimension"/>
+        <attr name="sb24h_divLineWidth" format="dimension"/>
+        <attr name="sb24h_state" format="enum">
             <enum name="enable" value="0" />
             <enum name="disable" value="1" />
         </attr>
-        <attr name="Sb24hMinDivider" format="enum">
+        <attr name="sb24h_minDivider" format="enum">
             <enum name="min" value="0" />
             <enum name="sec" value="1" />
         </attr>

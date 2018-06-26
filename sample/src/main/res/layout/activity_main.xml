@@ -8,14 +8,39 @@
     tools:context=".MainActivity">
 
     <com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
+        android:id="@+id/seek_bar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:sb24h_backgroundColor="@color/colorAccent"
+        app:sb24h_textColor="@color/colorPrimary"
+        app:sb24h_divLineHeight="8dp"
+        app:sb24h_mainEventColor="@color/colorPrimaryDark"
+        app:sb24h_markEventColor="@android:color/darker_gray"
+        app:sb24h_borderHeight="40dp"
+        app:sb24h_minDivider="min"
+        app:sb24h_textFontFamilyName="sans-serif-light"
+        app:sb24h_textSize="12dp" />
+
+    <com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
         android:id="@+id/seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:Sb24hBackgroundColor="@color/colorPrimary"
-        app:Sb24hBorderHeight="20dp"
-        app:Sb24hMinDivider="sec" />
+        app:sb24h_backgroundColor="@color/colorPrimary"
+        app:sb24h_borderHeight="20dp"
+        app:sb24h_textFontFamilyName="sans-serif-light"
+        app:sb24h_textSize="10dp"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar2"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar2"
+        app:sb24h_minDivider="sec" />
+
+   <!-- android:fontFamily="sans-serif"           // roboto regular
+    android:fontFamily="sans-serif-light"     // roboto light
+    android:fontFamily="sans-serif-condensed" // roboto condensed
+    android:fontFamily="sans-serif-thin"      // roboto thin (android 4.2)
+    android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)-->
 
     <Button
         android:id="@+id/btn_draw"
@@ -86,6 +111,9 @@
         android:text="Event type"
         app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/event_type_spinner" />
+
+
+
 
 
 </android.support.constraint.ConstraintLayout>

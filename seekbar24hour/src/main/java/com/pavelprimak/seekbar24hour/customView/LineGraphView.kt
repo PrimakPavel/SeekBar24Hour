@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
@@ -34,6 +35,7 @@ class LineGraphView : View {
         const val DEFAULT_MARK_EVENT_COLOR = Color.RED
         const val DEFAULT_LINE_WIDTH = 1f//in dp
         const val DEFAULT_LINE_HEIGHT = 5f//in dp
+        const val DEFAULT_FONT_FAMILY_NAME = "sans-serif-light"
     }
 
     //COLORS
@@ -54,6 +56,9 @@ class LineGraphView : View {
     private var textSizeInPx = ConvertValueUtil.convertDpToPixel(DEFAULT_TEXT_SIZE, context)
     private var textTopMarginInPx = ConvertValueUtil.convertDpToPixel(DEFAULT_TEXT_TOP_MARGIN, context)
 
+
+    //Typeface
+    private var fontFamilyName = LineGraphView.DEFAULT_FONT_FAMILY_NAME
 
     //data Lists
     private var mainEventsList = ArrayList<Event>()
@@ -121,9 +126,20 @@ class LineGraphView : View {
                                lineWidthInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_LINE_HEIGHT, context),
                                lineHeightInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_LINE_HEIGHT, context),
                                leftMarginInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_LEFT_MARGIN, context),
-                               rightMarginInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_RIGHT_MARGIN, context)
-    ) {
-        initInPx(backgroundColors, mainEventColor, markEventColor, textColor, textSize, dividerType, mainHeight, lineWidthInPx, lineHeightInPx, leftMarginInPx, rightMarginInPx)
+                               rightMarginInPx: Float = ConvertValueUtil.convertDpToPixel(DEFAULT_RIGHT_MARGIN, context),
+                               fontFamilyName: String = DEFAULT_FONT_FAMILY_NAME) {
+        initInPx(backgroundColors,
+                mainEventColor,
+                markEventColor,
+                textColor,
+                textSize,
+                dividerType,
+                mainHeight,
+                lineWidthInPx,
+                lineHeightInPx,
+                leftMarginInPx,
+                rightMarginInPx,
+                fontFamilyName)
         invalidate()
     }
 
@@ -133,13 +149,13 @@ class LineGraphView : View {
                 0, 0)
 
         // Extract custom attributes into member variables
-        backgroundColors = typedArray.getColor(R.styleable.LineGraphView_LgvBackgroundColor, DEFAULT_BACKGROUND_COLOR)
-        mainEventColor = typedArray.getColor(R.styleable.LineGraphView_LgvMainEventColor, DEFAULT_MAIN_EVENT_COLOR)
-        markEventColor = typedArray.getColor(R.styleable.LineGraphView_LgvMarkEventColor, DEFAULT_MARK_EVENT_COLOR)
-        textColor = typedArray.getColor(R.styleable.LineGraphView_LgvTextColor, DEFAULT_TEXT_COLOR)
-        textSizeInPx = typedArray.getDimension(R.styleable.LineGraphView_LgvTextSize, textSizeInPx)
-        dividerType = typedArray.getInt(R.styleable.LineGraphView_LgvMinDivider, DIVIDER_MINUTES)
-        mainHeightInPx = typedArray.getDimension(R.styleable.LineGraphView_LgvBorderHeight, mainHeightInPx) + topMarginInPx
+        backgroundColors = typedArray.getColor(R.styleable.LineGraphView_lgv_backgroundColor, DEFAULT_BACKGROUND_COLOR)
+        mainEventColor = typedArray.getColor(R.styleable.LineGraphView_lgv_mainEventColor, DEFAULT_MAIN_EVENT_COLOR)
+        markEventColor = typedArray.getColor(R.styleable.LineGraphView_lgv_markEventColor, DEFAULT_MARK_EVENT_COLOR)
+        textColor = typedArray.getColor(R.styleable.LineGraphView_lgv_textColor, DEFAULT_TEXT_COLOR)
+        textSizeInPx = typedArray.getDimension(R.styleable.LineGraphView_lgv_textSize, textSizeInPx)
+        dividerType = typedArray.getInt(R.styleable.LineGraphView_lgv_minDivider, DIVIDER_MINUTES)
+        mainHeightInPx = typedArray.getDimension(R.styleable.LineGraphView_lgv_borderHeight, mainHeightInPx) + topMarginInPx
         initGraphWidth()
         // TypedArray objects are shared and must be recycled.
         typedArray.recycle()
@@ -166,7 +182,8 @@ class LineGraphView : View {
                          lineWidthInPx: Float,
                          lineHeightInPx: Float,
                          leftMarginInPx: Float,
-                         rightMarginInPx: Float) {
+                         rightMarginInPx: Float,
+                         fontFamilyName: String) {
         this.backgroundColors = backgroundColors
         this.mainEventColor = mainEventColor
         this.markEventColor = markEventColor
@@ -178,6 +195,7 @@ class LineGraphView : View {
         this.lineHeightInPx = lineHeightInPx
         this.leftMarginInPx = leftMarginInPx
         this.rightMarginInPx = rightMarginInPx
+        this.fontFamilyName = fontFamilyName
         initGraphWidth()
     }
 
@@ -198,15 +216,9 @@ class LineGraphView : View {
     private fun drawText(canvas: Canvas, position: Float, text: String) {
         paint.color = textColor
         paint.textSize = textSizeInPx
-        //paint.typeface = Typeface.create("Arial",Typeface.ITALIC)
-        val textLeftMargin: Float = when (text.length) {
-            2 -> textSizeInPx / 2
-            3 -> textSizeInPx / 1.5f
-            4 -> textSizeInPx
-            5 -> textSizeInPx + textSizeInPx / 2f
-            6 -> textSizeInPx + textSizeInPx / 1.5f
-            else -> textSizeInPx
-        }
+        paint.typeface = Typeface.create(fontFamilyName, Typeface.NORMAL)
+        val textLeftMargin: Float = paint.measureText(text) / 2
+
         canvas.drawText(text, leftMarginInPx + position - textLeftMargin, textTopMarginInPx, paint)
     }
 

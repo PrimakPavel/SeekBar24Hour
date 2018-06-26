@@ -21,6 +21,9 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
     private val seekBarView: SeekBar24HourView by lazy {
         findViewById<SeekBar24HourView>(R.id.seek_bar)
     }
+    private val seekBarView2: SeekBar24HourView by lazy {
+        findViewById<SeekBar24HourView>(R.id.seek_bar2)
+    }
     private val eventStartPosition: EditText by lazy {
         findViewById<EditText>(R.id.start_position_input)
     }
@@ -47,7 +50,9 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
         //Create main events list. Add event in SECONDS
         mainEventsList.add(Event(3600, 3600))
         val lineGraphView = seekBarView.lineGraphView
+        val lineGraphView2 = seekBarView2.lineGraphView
         lineGraphView?.setMainEventList(mainEventsList)
+        lineGraphView2?.setMainEventList(mainEventsList)
         //Change CENTER MARKER drawable
         seekBarView.setCursorDrawable(ContextCompat.getDrawable(this, R.drawable.marker_center)!!)
 
@@ -58,6 +63,7 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
 
     private fun addEventBtnClick() {
         val lineGraphView = seekBarView.lineGraphView
+        val lineGraphView2 = seekBarView2.lineGraphView
         var startPosition: Int = 0
         var duration: Int = 0
         try {
@@ -69,9 +75,11 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
         if (eventTypeSpinner.selectedItemPosition == 0) {
             mainEventsList.add(Event(startPosition, duration))
             lineGraphView?.setMainEventList(mainEventsList)
+            lineGraphView2?.setMainEventList(mainEventsList)
         } else {
             markEventsList.add(Event(startPosition, duration))
             lineGraphView?.setMarkEventList(markEventsList)
+            lineGraphView2?.setMarkEventList(markEventsList)
         }
 
     }
