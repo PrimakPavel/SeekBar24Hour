@@ -3,34 +3,81 @@ package com.example.pavelprimak.customviewapp
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Button
-import android.widget.Toast
+import android.widget.EditText
+import android.widget.Spinner
+import com.pavelprimak.seekbar24hour.OnSeek24BarChangeListener
 import com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
 import com.pavelprimak.seekbar24hour.model.Event
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
+
+    companion object {
+        const val TAG = "Sample"
+    }
+
     private val seekBarView: SeekBar24HourView by lazy {
         findViewById<SeekBar24HourView>(R.id.seek_bar)
     }
-    private val btn: Button by lazy {
+    private val eventStartPosition: EditText by lazy {
+        findViewById<EditText>(R.id.start_position_input)
+    }
+    private val eventDuration: EditText by lazy {
+        findViewById<EditText>(R.id.duration_input)
+    }
+    private val eventTypeSpinner: Spinner by lazy {
+        findViewById<Spinner>(R.id.event_type_spinner)
+    }
+
+
+    private val btnAddEvent: Button by lazy {
         findViewById<Button>(R.id.btn_draw)
     }
+    private val mainEventsList = ArrayList<Event>()
+    private val markEventsList = ArrayList<Event>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val mainEventsList = ArrayList<Event>()
-        mainEventsList.add(Event(3600, 3600))
-        val lineView = seekBarView.lineGraphView
-        seekBarView.setCursorDrawable(ContextCompat.getDrawable(this,R.drawable.marker_center)!!)
+        mainEventsList.clear()
+        markEventsList.clear()
 
-        lineView?.setMainEventList(mainEventsList)
-        btn.setOnClickListener({
-            mainEventsList.clear()
-            seekBarView.setPositionInPercents(100f)
-            Toast.makeText(this,seekBarView.getPositionInPercents().toString(),Toast.LENGTH_LONG).show()
-            mainEventsList.add(Event(7200, 3600))
-            lineView?.setMarkEventList(mainEventsList)
+        //Create main events list. Add event in SECONDS
+        mainEventsList.add(Event(3600, 3600))
+        val lineGraphView = seekBarView.lineGraphView
+        lineGraphView?.setMainEventList(mainEventsList)
+        //Change CENTER MARKER drawable
+        seekBarView.setCursorDrawable(ContextCompat.getDrawable(this, R.drawable.marker_center)!!)
+
+        btnAddEvent.setOnClickListener({
+            addEventBtnClick()
         })
+    }
+
+    private fun addEventBtnClick() {
+        val lineGraphView = seekBarView.lineGraphView
+        val startPosition = eventStartPosition.text.trim().toString().toInt()
+        val duration = eventDuration.text.trim().toString().toInt()
+        if (eventTypeSpinner.selectedItemPosition == 0) {
+            mainEventsList.add(Event(startPosition, duration))
+            lineGraphView?.setMainEventList(mainEventsList)
+        }else{
+            markEventsList.add(Event(startPosition, duration))
+            lineGraphView?.setMarkEventList(markEventsList)
+        }
+
+    }
+
+    override fun onProgressChanged(progressInPercents: Float, fromUser: Boolean) {
+        Log.d(TAG, "onProgressChanged. ProgressInPercents=$progressInPercents. IsFromUser =$fromUser")
+    }
+
+    override fun onStartTrackingTouch(progressInPercents: Float) {
+        Log.d(TAG, "onStartTrackingTouch. ProgressInPercents=$progressInPercents")
+    }
+
+    override fun onStopTrackingTouch(progressInPercents: Float) {
+        Log.d(TAG, "onStopTrackingTouch. ProgressInPercents=$progressInPercents")
     }
 }

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CustomViewApp</string>
+    <string-array name="event_type">
+        <item>Main</item>
+        <item>Mark</item>
+    </string-array>
 </resources>

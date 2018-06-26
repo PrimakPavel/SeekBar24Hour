@@ -1,52 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-   <!--<HorizontalScrollView
-       android:id="@+id/scroll_container"
-       android:layout_marginLeft="20dp"
-       android:layout_marginRight="20dp"
-       android:layout_width="match_parent"
-       android:scrollbars="none"
-       android:layout_height="wrap_content">
-       <com.example.pavelprimak.customviewapp.customView.LineGraphView
-           android:id="@+id/lineView"
-           app:LgvBackgroundColor="@color/colorPrimary"
-           android:layout_marginTop="20dp"
-           app:LgvMarkEventColor="@color/colorAccent"
-           app:LgvMainEventColor="@android:color/white"
-           app:LgvBorderHeight="20dp"
-           app:LgvTextColor="@android:color/darker_gray"
-           app:LgvTextSize="10dp"
-           app:LgvMinDivider="min"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content" />
-   </HorizontalScrollView>-->
+
     <com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
         android:id="@+id/seek_bar"
-        app:Sb24hBackgroundColor="@android:color/holo_red_light"
         android:layout_width="match_parent"
-        app:Sb24hBorderHeight="20dp"
-        app:Sb24hMinDivider="sec"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_height="wrap_content">
-
-    </com.pavelprimak.seekbar24hour.customView.SeekBar24HourView>
+        app:Sb24hBackgroundColor="@color/colorPrimary"
+        app:Sb24hBorderHeight="20dp"
+        app:Sb24hMinDivider="min" />
 
     <Button
         android:id="@+id/btn_draw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         android:layout_gravity="center"
-        android:text="Draw"/>
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Add "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/duration_input" />
+
+    <EditText
+        android:id="@+id/start_position_input"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/duration_input"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/start_position_input"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Start in Sec"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/duration_input"
+         />
+
+    <Spinner
+        android:id="@+id/event_type_spinner"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:entries="@array/event_type"
+        app:layout_constraintStart_toEndOf="@+id/duration_input"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event type"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="@+id/event_type_spinner" />
 
 
-
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
