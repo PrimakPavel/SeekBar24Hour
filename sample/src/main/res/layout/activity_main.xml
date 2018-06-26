@@ -31,6 +31,7 @@
         app:Sb24hBackgroundColor="@android:color/holo_red_light"
         android:layout_width="match_parent"
         app:Sb24hBorderHeight="20dp"
+        app:Sb24hMinDivider="sec"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_height="wrap_content">

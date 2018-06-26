@@ -8,8 +8,8 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.View
-import com.pavelprimak.seekbar24hour.model.Event
 import com.pavelprimak.seekbar24hour.R
+import com.pavelprimak.seekbar24hour.model.Event
 import com.pavelprimak.seekbar24hour.utils.ConvertValueUtil
 import java.util.*
 
@@ -185,7 +185,7 @@ class LineGraphView : View {
         mainWidthInPx = if (dividerType == DIVIDER_MINUTES) {
             ConvertValueUtil.convertDpToPixel(WIDTH_MINUTES_GRAPH, context) + leftMarginInPx + rightMarginInPx
         } else {
-            ConvertValueUtil.convertDpToPixel(WIDTH_SECONDS_GRAPH, context) + leftMarginInPx
+            ConvertValueUtil.convertDpToPixel(WIDTH_SECONDS_GRAPH, context) + leftMarginInPx + rightMarginInPx
         }
     }
 
@@ -200,9 +200,12 @@ class LineGraphView : View {
         paint.textSize = textSizeInPx
         //paint.typeface = Typeface.create("Arial",Typeface.ITALIC)
         val textLeftMargin: Float = when (text.length) {
+            2 -> textSizeInPx / 2
             3 -> textSizeInPx / 1.5f
             4 -> textSizeInPx
-            else -> textSizeInPx / 2
+            5 -> textSizeInPx + textSizeInPx / 2f
+            6 -> textSizeInPx + textSizeInPx / 1.5f
+            else -> textSizeInPx
         }
         canvas.drawText(text, leftMarginInPx + position - textLeftMargin, textTopMarginInPx, paint)
     }
@@ -210,11 +213,18 @@ class LineGraphView : View {
     private fun drawTexts(canvas: Canvas) {
         if (dividerType == DIVIDER_MINUTES) {
             for (i in MIN_IN_HOUR..WIDTH_MINUTES_GRAPH.toInt() - MIN_IN_HOUR step MIN_IN_HOUR) {
-                drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02d", i / MIN_IN_HOUR))
+                drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02dh", i / MIN_IN_HOUR))
             }
         } else {
             for (i in SEC_IN_MIN..WIDTH_SECONDS_GRAPH.toInt() - SEC_IN_MIN step SEC_IN_MIN) {
-                drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02d", i / SEC_IN_MIN))
+                val min = i / SEC_IN_MIN
+                val hour = min / MIN_IN_HOUR
+                if (hour > 0) {
+                    drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02dh%02dm", hour, min % MIN_IN_HOUR))
+                } else {
+                    drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02dm", min % MIN_IN_HOUR))
+                }
+
             }
         }
     }
