@@ -157,7 +157,7 @@ class SeekBar24HourView : LinearLayout {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun prepareTouchEventListener(scrollView: CustomHorizontalScrollView?) {
-        scrollView?.setOnTouchListener { v, event ->
+        scrollView?.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isUserTouch = true
