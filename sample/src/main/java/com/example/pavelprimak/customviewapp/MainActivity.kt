@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import com.pavelprimak.seekbar24hour.OnSeek24BarChangeListener
 import com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
 import com.pavelprimak.seekbar24hour.model.Event
@@ -57,12 +58,18 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
 
     private fun addEventBtnClick() {
         val lineGraphView = seekBarView.lineGraphView
-        val startPosition = eventStartPosition.text.trim().toString().toInt()
-        val duration = eventDuration.text.trim().toString().toInt()
+        var startPosition: Int = 0
+        var duration: Int = 0
+        try {
+            startPosition = eventStartPosition.text?.trim()?.toString()?.toInt() ?: 0
+            duration = eventDuration.text?.trim()?.toString()?.toInt() ?: 0
+        } catch (e: Exception) {
+            Toast.makeText(this, "Wrong input data!", Toast.LENGTH_LONG).show()
+        }
         if (eventTypeSpinner.selectedItemPosition == 0) {
             mainEventsList.add(Event(startPosition, duration))
             lineGraphView?.setMainEventList(mainEventsList)
-        }else{
+        } else {
             markEventsList.add(Event(startPosition, duration))
             lineGraphView?.setMarkEventList(markEventsList)
         }

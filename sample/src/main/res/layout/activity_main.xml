@@ -15,7 +15,7 @@
         android:layout_marginRight="16dp"
         app:Sb24hBackgroundColor="@color/colorPrimary"
         app:Sb24hBorderHeight="20dp"
-        app:Sb24hMinDivider="min" />
+        app:Sb24hMinDivider="sec" />
 
     <Button
         android:id="@+id/btn_draw"
@@ -36,6 +36,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:text="0"
         android:inputType="number"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -45,6 +46,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:text="0"
         android:inputType="number"
         app:layout_constraintStart_toEndOf="@+id/start_position_input"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
