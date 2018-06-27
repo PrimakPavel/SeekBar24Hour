@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import com.pavelprimak.seekbar24hour.OnSeek24BarChangeListener
+import com.pavelprimak.seekbar24hour.customView.LineGraphView
+import com.pavelprimak.seekbar24hour.customView.LineGraphView.Companion.MIN_IN_HOUR
+import com.pavelprimak.seekbar24hour.customView.LineGraphView.Companion.SEC_IN_MIN
 import com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
 import com.pavelprimak.seekbar24hour.model.Event
 
-class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
+class MainActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "Sample"
@@ -34,6 +34,14 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
         findViewById<Spinner>(R.id.event_type_spinner)
     }
 
+    private val positionLabel: TextView by lazy {
+        findViewById<TextView>(R.id.position_label)
+    }
+
+    private val positionLabel2: TextView by lazy {
+        findViewById<TextView>(R.id.position_label2)
+    }
+
 
     private val btnAddEvent: Button by lazy {
         findViewById<Button>(R.id.btn_draw)
@@ -44,6 +52,36 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        seekBarView.setOnSeek24BarChangeListener(object : OnSeek24BarChangeListener {
+            override fun onProgressChanged(progressInPercents: Float, fromUser: Boolean) {
+                Log.d(TAG, "onProgressChanged. ProgressInPercents=$progressInPercents. IsFromUser =$fromUser")
+            }
+
+            override fun onStartTrackingTouch(progressInPercents: Float) {
+                Log.d(TAG, "onStartTrackingTouch. ProgressInPercents=$progressInPercents")
+            }
+
+            override fun onStopTrackingTouch(progressInPercents: Float) {
+                updateLabelPosition(progressInPercents, positionLabel)
+                Log.d(TAG, "onStopTrackingTouch. ProgressInPercents=$progressInPercents")
+            }
+        })
+
+
+        seekBarView2.setOnSeek24BarChangeListener(object : OnSeek24BarChangeListener {
+            override fun onProgressChanged(progressInPercents: Float, fromUser: Boolean) {
+                Log.d(TAG, "onProgressChanged. ProgressInPercents=$progressInPercents. IsFromUser =$fromUser")
+            }
+
+            override fun onStartTrackingTouch(progressInPercents: Float) {
+                Log.d(TAG, "onStartTrackingTouch. ProgressInPercents=$progressInPercents")
+            }
+
+            override fun onStopTrackingTouch(progressInPercents: Float) {
+                updateLabelPosition(progressInPercents, positionLabel2)
+                Log.d(TAG, "onStopTrackingTouch. ProgressInPercents=$progressInPercents")
+            }
+        })
         mainEventsList.clear()
         markEventsList.clear()
 
@@ -59,6 +97,19 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
         btnAddEvent.setOnClickListener({
             addEventBtnClick()
         })
+    }
+
+    override fun onResume() {
+        updateLabelPosition(seekBarView.percents, positionLabel)
+        updateLabelPosition(seekBarView2.percents, positionLabel2)
+        super.onResume()
+    }
+
+    private fun updateLabelPosition(progressInPercents: Float, textView: TextView) {
+        val progressInSec = (progressInPercents * LineGraphView.WIDTH_SECONDS_GRAPH / 100).toInt()
+        val min = progressInSec / SEC_IN_MIN
+        val hour = min / MIN_IN_HOUR
+        textView.text = String.format("%02d:%02d:%02d", hour, min % MIN_IN_HOUR, progressInSec % SEC_IN_MIN)
     }
 
     private fun addEventBtnClick() {
@@ -82,17 +133,5 @@ class MainActivity : AppCompatActivity(), OnSeek24BarChangeListener {
             lineGraphView2?.setMarkEventList(markEventsList)
         }
 
-    }
-
-    override fun onProgressChanged(progressInPercents: Float, fromUser: Boolean) {
-        Log.d(TAG, "onProgressChanged. ProgressInPercents=$progressInPercents. IsFromUser =$fromUser")
-    }
-
-    override fun onStartTrackingTouch(progressInPercents: Float) {
-        Log.d(TAG, "onStartTrackingTouch. ProgressInPercents=$progressInPercents")
-    }
-
-    override fun onStopTrackingTouch(progressInPercents: Float) {
-        Log.d(TAG, "onStopTrackingTouch. ProgressInPercents=$progressInPercents")
     }
 }

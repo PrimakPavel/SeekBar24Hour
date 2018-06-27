@@ -11,6 +11,7 @@ class CustomHorizontalScrollView(context: Context, attrs: AttributeSet) : Horizo
     private var initialPosition: Int = 0
 
     private val newCheck = 100
+    private var isStopped = true
 
     private var onScrollStoppedListener: OnScrollStoppedListener? = null
 
@@ -22,9 +23,10 @@ class CustomHorizontalScrollView(context: Context, attrs: AttributeSet) : Horizo
         scrollerTask = Runnable {
             val newPosition = scrollX
             if (initialPosition - newPosition == 0) {//has stopped
-
+                isStopped = true
                 if (onScrollStoppedListener != null) {
                     onScrollStoppedListener?.onScrollStopped()
+
                 }
             } else {
                 initialPosition = scrollX
@@ -38,8 +40,11 @@ class CustomHorizontalScrollView(context: Context, attrs: AttributeSet) : Horizo
     }
 
     fun startScrollerTask() {
-        initialPosition = scrollX
-        this.postDelayed(scrollerTask, newCheck.toLong())
+        if (isStopped) {
+            isStopped = false
+            initialPosition = scrollX
+            this.postDelayed(scrollerTask, newCheck.toLong())
+        }
     }
 
     companion object {

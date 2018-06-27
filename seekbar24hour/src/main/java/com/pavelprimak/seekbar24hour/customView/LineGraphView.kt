@@ -22,7 +22,7 @@ class LineGraphView : View {
         const val DEFAULT_RIGHT_MARGIN = 0f
         const val WIDTH_MINUTES_GRAPH = 1440f//in dp
         const val WIDTH_SECONDS_GRAPH = 86400f//in dp
-        const val DEFAULT_HEIGHT_GRAPH = 30f//in dp
+        const val DEFAULT_HEIGHT_GRAPH = 10f//in dp
         const val DIVIDER_MINUTES = 0
         const val DIVIDER_SECONDS = 1
         const val SEC_IN_MIN = 60
@@ -161,7 +161,13 @@ class LineGraphView : View {
         typedArray.recycle()
     }
 
-    private fun init(backgroundColors: Int, mainEventColor: Int, markEventColor: Int, textColor: Int, textSize: Float, dividerType: Int, mainHeight: Float) {
+    private fun init(backgroundColors: Int,
+                     mainEventColor: Int,
+                     markEventColor: Int,
+                     textColor: Int,
+                     textSize: Float,
+                     dividerType: Int,
+                     mainHeight: Float) {
         this.backgroundColors = backgroundColors
         this.mainEventColor = mainEventColor
         this.markEventColor = markEventColor
@@ -214,28 +220,31 @@ class LineGraphView : View {
     }
 
     private fun drawText(canvas: Canvas, position: Float, text: String) {
-        paint.color = textColor
-        paint.textSize = textSizeInPx
-        paint.typeface = Typeface.create(fontFamilyName, Typeface.NORMAL)
-        val textLeftMargin: Float = paint.measureText(text) / 2
+        val fontPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        fontPaint.color = textColor
+        fontPaint.textSize = textSizeInPx
+        fontPaint.style = Paint.Style.STROKE
+        fontPaint.typeface = Typeface.create(fontFamilyName, Typeface.NORMAL)
+        val textLeftMargin: Float = fontPaint.measureText(text) / 2
 
-        canvas.drawText(text, leftMarginInPx + position - textLeftMargin, textTopMarginInPx, paint)
+        canvas.drawText(text, leftMarginInPx + position - textLeftMargin, textTopMarginInPx, fontPaint)
     }
 
     private fun drawTexts(canvas: Canvas) {
         if (dividerType == DIVIDER_MINUTES) {
             for (i in MIN_IN_HOUR..WIDTH_MINUTES_GRAPH.toInt() - MIN_IN_HOUR step MIN_IN_HOUR) {
-                drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02dh", i / MIN_IN_HOUR))
+                drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02d", i / MIN_IN_HOUR))
             }
         } else {
             for (i in SEC_IN_MIN..WIDTH_SECONDS_GRAPH.toInt() - SEC_IN_MIN step SEC_IN_MIN) {
                 val min = i / SEC_IN_MIN
                 val hour = min / MIN_IN_HOUR
-                if (hour > 0) {
-                    drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02dh%02dm", hour, min % MIN_IN_HOUR))
+                drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02d:%02d", hour, min % MIN_IN_HOUR))
+                /*if (hour > 0) {
+                    drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02d:%02d", hour, min % MIN_IN_HOUR))
                 } else {
-                    drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02dm", min % MIN_IN_HOUR))
-                }
+                    drawText(canvas, ConvertValueUtil.convertDpToPixel(i.toFloat(), context), String.format("%02d", min % MIN_IN_HOUR))
+                }*/
 
             }
         }
