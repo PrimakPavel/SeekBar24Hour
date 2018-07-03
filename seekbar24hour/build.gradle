@@ -18,7 +18,7 @@ ext {
     siteUrl = 'https://github.com/primakpavel/SeekBar24Hour'
     gitUrl = 'https://github.com/primakpavel/SeekBar24Hour.git'
 
-    libraryVersion = '1.0.2'
+    libraryVersion = '1.0.3'
 
     developerId = 'primakpavel'
     developerName = 'Primak Pavel'
@@ -36,7 +36,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 2
-        versionName "1.0.2"
+        versionName "1.0.3"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

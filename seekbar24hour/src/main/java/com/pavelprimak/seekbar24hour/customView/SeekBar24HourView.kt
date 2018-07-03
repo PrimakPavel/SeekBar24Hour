@@ -120,14 +120,17 @@ class SeekBar24HourView : LinearLayout {
     }
 
     fun setPositionInPercents(percents: Float) {
-        if (percents in 0f..100f) {
-            this.percents = percents
-            lineGraphView?.width?.let { graphWidth ->
-                scrollView?.width?.let { scrollWidth ->
-                    val positionX = percents * (graphWidth - scrollWidth) / 100f
-                    scrollView?.scrollTo(positionX.toInt(), 0)
+        try {
+            if (percents in 0f..100f) {
+                this.percents = percents
+                lineGraphView?.width?.let { graphWidth ->
+                    scrollView?.width?.let { scrollWidth ->
+                        val positionX = percents * (graphWidth - scrollWidth) / 100f
+                        scrollView?.scrollTo(positionX.toInt(), 0)
+                    }
                 }
             }
+        } catch (e: Exception) {
         }
     }
 
