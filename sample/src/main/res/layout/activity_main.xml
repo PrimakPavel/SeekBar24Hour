@@ -20,7 +20,7 @@
         app:sb24h_markEventColor="@android:color/darker_gray"
         app:sb24h_minDivider="min"
         app:sb24h_textColor="@color/colorPrimary"
-        app:sb24h_textFontFamilyName="her"
+        app:sb24h_textFontFamilyName="sans-serif-thin"
         app:sb24h_textSize="12dp" />
 
     <com.pavelprimak.seekbar24hour.customView.SeekBar24HourView
@@ -30,19 +30,19 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
-        app:sb24h_backgroundColor="@color/colorPrimary"
-        app:sb24h_borderHeight="20dp"
-        app:sb24h_textFontFamilyName="sans-serif-light"
-        app:sb24h_textSize="10dp"
         app:layout_constraintStart_toStartOf="@+id/position_label2"
         app:layout_constraintTop_toBottomOf="@+id/position_label2"
-        app:sb24h_minDivider="sec" />
+        app:sb24h_backgroundColor="@color/colorPrimary"
+        app:sb24h_borderHeight="20dp"
+        app:sb24h_minDivider="sec"
+        app:sb24h_textFontFamilyName="sans-serif-light"
+        app:sb24h_textSize="10dp" />
 
-   <!-- android:fontFamily="sans-serif"           // roboto regular
-    android:fontFamily="sans-serif-light"     // roboto light
-    android:fontFamily="sans-serif-condensed" // roboto condensed
-    android:fontFamily="sans-serif-thin"      // roboto thin (android 4.2)
-    android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)-->
+    <!-- android:fontFamily="sans-serif"           // roboto regular
+     android:fontFamily="sans-serif-light"     // roboto light
+     android:fontFamily="sans-serif-condensed" // roboto condensed
+     android:fontFamily="sans-serif-thin"      // roboto thin (android 4.2)
+     android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)-->
 
     <Button
         android:id="@+id/btn_draw"
@@ -63,8 +63,8 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="0"
         android:inputType="number"
+        android:text="0"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -73,8 +73,8 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="0"
         android:inputType="number"
+        android:text="0"
         app:layout_constraintStart_toEndOf="@+id/start_position_input"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -95,8 +95,7 @@
         android:layout_height="wrap_content"
         android:text="Duration"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/duration_input"
-         />
+        app:layout_constraintStart_toStartOf="@+id/duration_input" />
 
     <Spinner
         android:id="@+id/event_type_spinner"

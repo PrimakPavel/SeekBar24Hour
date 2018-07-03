@@ -65,42 +65,45 @@ class SeekBar24HourView : LinearLayout {
     }
 
     private fun init(attrs: AttributeSet?) {
-        inflate(context, R.layout.seek_bar_24_hour, this)
+        try {
+            inflate(context, R.layout.seek_bar_24_hour, this)
 
-        // Obtain a typed array of attributes
-        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.SeekBar24HourView,
-                0, 0)
-        backgroundColors = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_backgroundColor, LineGraphView.DEFAULT_BACKGROUND_COLOR)
-        mainEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_mainEventColor, LineGraphView.DEFAULT_MAIN_EVENT_COLOR)
-        markEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_markEventColor, LineGraphView.DEFAULT_MARK_EVENT_COLOR)
-        textColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_textColor, LineGraphView.DEFAULT_TEXT_COLOR)
-        textSizeInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_textSize, textSizeInPx)
-        dividerType = typedArray.getInt(R.styleable.SeekBar24HourView_sb24h_minDivider, LineGraphView.DIVIDER_MINUTES)
-        mainHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_borderHeight, mainHeightInPx) + topMarginInPx
+            // Obtain a typed array of attributes
+            val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.SeekBar24HourView,
+                    0, 0)
+            backgroundColors = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_backgroundColor, LineGraphView.DEFAULT_BACKGROUND_COLOR)
+            mainEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_mainEventColor, LineGraphView.DEFAULT_MAIN_EVENT_COLOR)
+            markEventColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_markEventColor, LineGraphView.DEFAULT_MARK_EVENT_COLOR)
+            textColor = typedArray.getColor(R.styleable.SeekBar24HourView_sb24h_textColor, LineGraphView.DEFAULT_TEXT_COLOR)
+            textSizeInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_textSize, textSizeInPx)
+            dividerType = typedArray.getInt(R.styleable.SeekBar24HourView_sb24h_minDivider, LineGraphView.DIVIDER_MINUTES)
+            mainHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_borderHeight, mainHeightInPx) + topMarginInPx
 
-        lineWidthInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_divLineWidth, lineWidthInPx)
-        lineHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_divLineHeight, lineHeightInPx)
+            lineWidthInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_divLineWidth, lineWidthInPx)
+            lineHeightInPx = typedArray.getDimension(R.styleable.SeekBar24HourView_sb24h_divLineHeight, lineHeightInPx)
 
-        fontFamilyName = typedArray.getString(R.styleable.SeekBar24HourView_sb24h_textFontFamilyName)
-        if (fontFamilyName.isEmpty()) {
-            fontFamilyName = LineGraphView.DEFAULT_FONT_FAMILY_NAME
-        }
 
-        scrollView = findViewById(R.id.scroll_view)
-        cursorView = findViewById(R.id.cursor_view)
-        lineGraphView = findViewById(R.id.line_graph_view)
-        prepareScrollEventListener(scrollView)
-        prepareTouchEventListener(scrollView)
-        scrollView?.setOnScrollStoppedListener(object : CustomHorizontalScrollView.OnScrollStoppedListener {
-            override fun onScrollStopped() {
-                if (isUserTouch) {
-                    isUserTouch = false
-                    percents = getPositionInPercents()
-                    changeListener?.onStopTrackingTouch(percents)
-                    Log.e("Scroll", "onStopTrackingTouch % = $percents")
+            fontFamilyName = typedArray.getText(R.styleable.SeekBar24HourView_sb24h_textFontFamilyName)?.toString() ?: LineGraphView.DEFAULT_FONT_FAMILY_NAME
+
+            scrollView = findViewById(R.id.scroll_view)
+            cursorView = findViewById(R.id.cursor_view)
+            lineGraphView = findViewById(R.id.line_graph_view)
+            prepareScrollEventListener(scrollView)
+            prepareTouchEventListener(scrollView)
+            scrollView?.setOnScrollStoppedListener(object : CustomHorizontalScrollView.OnScrollStoppedListener {
+                override fun onScrollStopped() {
+                    if (isUserTouch) {
+                        isUserTouch = false
+                        percents = getPositionInPercents()
+                        changeListener?.onStopTrackingTouch(percents)
+                        Log.e("Scroll", "onStopTrackingTouch % = $percents")
+                    }
                 }
-            }
-        })
+            })
+            // TypedArray objects are shared and must be recycled.
+            typedArray.recycle()
+        } catch (e: Exception) {
+        }
     }
 
     fun setCursorDrawable(cursorDrawable: Drawable) {
@@ -135,17 +138,20 @@ class SeekBar24HourView : LinearLayout {
     }
 
     private fun getPositionInPercents(): Float {
-        lineGraphView?.width?.let { graphWidth ->
-            scrollView?.width?.let { scrollWidth ->
-                scrollView?.scrollX?.let { x ->
-                    val percents: Float
-                    try {
-                        percents = x * 100f / (graphWidth - scrollWidth)
-                        return percents
-                    } catch (e: Exception) {
+        try {
+            lineGraphView?.width?.let { graphWidth ->
+                scrollView?.width?.let { scrollWidth ->
+                    scrollView?.scrollX?.let { x ->
+                        val percents: Float
+                        try {
+                            percents = x * 100f / (graphWidth - scrollWidth)
+                            return percents
+                        } catch (e: Exception) {
+                        }
                     }
                 }
             }
+        } catch (e: Exception) {
         }
         return 0f
     }
@@ -155,79 +161,95 @@ class SeekBar24HourView : LinearLayout {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        super.onLayout(changed, l, t, r, b)
-        if (changed) {
-            Log.d("Scroll", "ScrollContainerWidth = " + scrollView?.width)
-            val marginInPx = scrollView?.width?.toFloat() ?: 0f
-            lineGraphView?.setValuesAndInvalidate(
-                    backgroundColors,
-                    mainEventColor,
-                    markEventColor,
-                    textColor,
-                    textSizeInPx,
-                    dividerType,
-                    mainHeightInPx,
-                    lineWidthInPx,
-                    lineHeightInPx,
-                    marginInPx / 2,
-                    marginInPx / 2,
-                    fontFamilyName)
+        try {
+            super.onLayout(changed, l, t, r, b)
+            if (changed) {
+                Log.d("Scroll", "ScrollContainerWidth = " + scrollView?.width)
+                val marginInPx = scrollView?.width?.toFloat() ?: 0f
+                lineGraphView?.setValuesAndInvalidate(
+                        backgroundColors,
+                        mainEventColor,
+                        markEventColor,
+                        textColor,
+                        textSizeInPx,
+                        dividerType,
+                        mainHeightInPx,
+                        lineWidthInPx,
+                        lineHeightInPx,
+                        marginInPx / 2,
+                        marginInPx / 2,
+                        fontFamilyName)
+            }
+            //update position
+            setPositionInPercents(percents)
+        } catch (e: Exception) {
         }
-        //update position
-        setPositionInPercents(percents)
     }
 
     private fun prepareScrollEventListener(scrollView: CustomHorizontalScrollView?) {
-        scrollView?.viewTreeObserver?.addOnScrollChangedListener {
+        try {
+            scrollView?.viewTreeObserver?.addOnScrollChangedListener {
 
-            val scrollX = scrollView.scrollX // For HorizontalScrollView
-            // DO SOMETHING WITH THE SCROLL COORDINATES
-            lineGraphView?.width?.let { width ->
-                val percents = scrollX * 100f / (width - scrollView.width)
-                if (percents != this.percents) {
-                    if (percents in 0f..100f) {
-                        changeListener?.onProgressChanged(percents, isUserTouch)
-                        Log.d("Scroll", "onProgressChanged % = $percents.IsUser = $isUserTouch")
+                val scrollX = scrollView.scrollX // For HorizontalScrollView
+                // DO SOMETHING WITH THE SCROLL COORDINATES
+                lineGraphView?.width?.let { width ->
+                    val percents = scrollX * 100f / (width - scrollView.width)
+                    if (percents != this.percents) {
+                        if (percents in 0f..100f) {
+                            changeListener?.onProgressChanged(percents, isUserTouch)
+                            Log.d("Scroll", "onProgressChanged % = $percents.IsUser = $isUserTouch")
+                        }
                     }
                 }
-            }
 
+            }
+        } catch (e: Exception) {
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun prepareTouchEventListener(scrollView: CustomHorizontalScrollView?) {
-        scrollView?.setOnTouchListener { _, event ->
-            Log.d("Scroll", "Action=" + event.action.toString())
-            when (event.action) {
-                MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
-                    if (!isUserTouch) {
-                        isUserTouch = true
-                        percents = getPositionInPercents()
-                        changeListener?.onStartTrackingTouch(percents)
-                        Log.e("Scroll", "onStartTrackingTouch % = $percents")
+        try {
+            scrollView?.setOnTouchListener { _, event ->
+                Log.d("Scroll", "Action=" + event.action.toString())
+                when (event.action) {
+                    MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
+                        if (!isUserTouch) {
+                            isUserTouch = true
+                            percents = getPositionInPercents()
+                            changeListener?.onStartTrackingTouch(percents)
+                            Log.e("Scroll", "onStartTrackingTouch % = $percents")
+                        }
                     }
+                    MotionEvent.ACTION_UP ->
+                        scrollView.startScrollerTask()
                 }
-                MotionEvent.ACTION_UP ->
-                    scrollView.startScrollerTask()
+                false
             }
-            false
+        } catch (e: Exception) {
         }
     }
 
     public override fun onSaveInstanceState(): Parcelable? {
-        val positionSavedState = PositionSavedState(super.onSaveInstanceState())
-        positionSavedState.position = percents
-        return positionSavedState
+        try {
+            val positionSavedState = PositionSavedState(super.onSaveInstanceState())
+            positionSavedState.position = percents
+            return positionSavedState
+        } catch (e: Exception) {
+            return null
+        }
     }
 
-    public override fun onRestoreInstanceState(state: Parcelable) {
-        if (state is PositionSavedState) {
-            percents = state.position
-            Log.d("Scroll", "Percentage =$percents")
-            super.onRestoreInstanceState(state.superState)
-        } else {
-            super.onRestoreInstanceState(state)
+    public override fun onRestoreInstanceState(state: Parcelable?) {
+        try {
+            if (state is PositionSavedState) {
+                percents = state.position
+                Log.d("Scroll", "Percentage =$percents")
+                super.onRestoreInstanceState(state.superState)
+            } else {
+                super.onRestoreInstanceState(state)
+            }
+        } catch (e: Exception) {
         }
     }
 }
