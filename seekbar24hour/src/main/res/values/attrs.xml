@@ -26,7 +26,6 @@
         <attr name="sb24h_textColor" format="color"/>
         <attr name="sb24h_textSize" format="dimension"/>
         <attr name="sb24h_textFontFamilyName" format="string"/>
-        <attr name="sb24h_textFontStyle" format="integer"/>
         <attr name="sb24h_borderHeight" format="dimension"/>
         <attr name="sb24h_divLineHeight" format="dimension"/>
         <attr name="sb24h_divLineWidth" format="dimension"/>
